@@ -5,11 +5,9 @@ import org.ing.entity.UsuarioEntity
 import org.ing.interfaces.IUsuarioRepository
 import org.ing.model.ConteoPorPermiso
 import org.ing.model.UsuarioModel
-import org.ing.tables.UsuarioTable
+import org.ing.tables.TrabajadorTable
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.count
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.selectAllBatched
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 class UsuarioRepository : IUsuarioRepository {
@@ -42,15 +40,15 @@ class UsuarioRepository : IUsuarioRepository {
     }
 
     override suspend fun contarUsuarioPorPermiso(): List<ConteoPorPermiso> = dbQuery {
-        val countAlias = UsuarioTable.id.count().alias("total")
+        val countAlias = TrabajadorTable.id.count().alias("total")
 
-        UsuarioTable
-            .select(UsuarioTable.permisos, countAlias)
-            .groupBy(UsuarioTable.permisos)
+        TrabajadorTable
+            .select(TrabajadorTable.permisos, countAlias)
+            .groupBy(TrabajadorTable.permisos)
             .map {
                 row ->
                 ConteoPorPermiso(
-                    permiso = row[UsuarioTable.permisos],
+                    permiso = row[TrabajadorTable.permisos],
                     total = row[countAlias]
                 )
             }

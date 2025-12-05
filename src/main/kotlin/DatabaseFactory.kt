@@ -2,7 +2,7 @@ package org.ing
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.ing.tables.UsuarioTable
+import org.ing.tables.TrabajadorTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -24,7 +24,7 @@ object DatabaseFactory {
         fun connectDatabase() {
             val database = Database.connect(jdbcUrl, driverClassName, userName, password)
             transaction(database) {
-                SchemaUtils.create(UsuarioTable)
+                SchemaUtils.create(TrabajadorTable)
             }
         }
         fun conectDataSource() {
