@@ -2,7 +2,10 @@ package org.ing
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.ing.tables.TrabajadorTable
+import org.ing.tables.OrdenTable
+import org.ing.tables.PermisoTable
+import org.ing.tables.PrendaTable
+import org.ing.tables.UsuarioTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -24,7 +27,7 @@ object DatabaseFactory {
         fun connectDatabase() {
             val database = Database.connect(jdbcUrl, driverClassName, userName, password)
             transaction(database) {
-                SchemaUtils.create(TrabajadorTable)
+                SchemaUtils.create(PermisoTable, UsuarioTable, PrendaTable, OrdenTable)
             }
         }
         fun conectDataSource() {
@@ -38,7 +41,10 @@ object DatabaseFactory {
             }
 
             dataSource = HikariDataSource(config)
-            Database.connect(dataSource!!)
+            val database = Database.connect(dataSource!!)
+            transaction(database) {
+                SchemaUtils.create(PermisoTable, UsuarioTable, PrendaTable, OrdenTable)
+            }
         }
         conectDataSource()
     }

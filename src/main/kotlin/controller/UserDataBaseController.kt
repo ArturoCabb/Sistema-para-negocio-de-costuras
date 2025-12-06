@@ -35,15 +35,15 @@ class UserDataBaseController(private val repositorio: IUsuarioRepository) {
         val edad = readlnOrNull()?.toInt() ?: 0
 
         println("Ingrese permisos")
-        val permisos = readlnOrNull() ?: ""
+        val permisos = readlnOrNull()
 
-        if (nombre.isBlank() || edad <= 0 || permisos.isBlank()) {
+        if (nombre.isBlank() || edad <= 0) {
             println("Datos invalidos")
             return
         }
 
         try {
-            repositorio.crearUsuario(nombre, edad, permisos)
+            repositorio.crearUsuario(nombre, edad, permisos, "contrasena")
         } catch (e : Exception) {
             println("Hubo un problema ${e.message}")
         }
@@ -52,7 +52,7 @@ class UserDataBaseController(private val repositorio: IUsuarioRepository) {
     private suspend fun mostrarUsuarios() {
         println("Listando Usuarios")
         val lista = repositorio.obtenerTodo()
-        println(lista.forEach { u -> println("%-5d | %-20s | %-5d | %-5s".format(u.id, u.nombre, u.edad, u.permisos)) })
+        println(lista.forEach { u -> println("%-5d | %-20s | %-5d | %-5s".format(u.id, u.nombre, u.edad, u.permiso)) })
     }
 
     private suspend fun borrarUsuario() {
@@ -67,7 +67,7 @@ class UserDataBaseController(private val repositorio: IUsuarioRepository) {
         val id = readlnOrNull()?.toLong() ?: 0
         try {
             val u = repositorio.obtenerPorId(id)
-            println("%-5d | %-20s | %-5d | %-5s".format(u.id, u.nombre, u.edad, u.permisos))
+            println("%-5d | %-20s | %-5d | %-5s".format(u.id, u.nombre, u.edad, u.permiso))
         } catch (_ : NullPointerException) {
             println("No se encontro el usuario")
         }
